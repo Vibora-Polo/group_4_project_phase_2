@@ -373,7 +373,105 @@ print('Match rate:', round(matched/total*100,2),'%')
     Match rate: 29.41 %
     
 
+# 8. Exploratory Data Analysis- Top Genres by Avg Worldwide Gross
+
 
 ```python
+#convert domestic and foreign revenue to numeric values
+merged['domestic_gross'] = pd.to_numeric(merged['domestic_gross'], errors='coerce')
+merged['foreign_gross'] = pd.to_numeric(merged['foreign_gross'], errors='coerce')
+
+#create worldwide gross
+merged['worldwide_gross'] = merged['domestic_gross'].fillna(0) + merged['foreign_gross'].fillna(0)
+
+genre_gross = (
+    merged.dropna(subset=['genres'])
+        .assign(genres=lambda x: x['genres'].str.split(','))
+        .explode('genres')
+        .groupby('genres')['worldwide_gross']
+        .mean()
+        .sort_values(ascending=False)
+        .head(10)
+)
+
+plt.figure(figsize=(10,5))
+genre_gross.plot(kind='bar')
+plt.title("Top Genres by Average Worldwide Gross")
+plt.ylabel("Avg Worldwide Gross")
+plt.show()
 
 ```
+
+
+    
+![png](group_4_project_files/group_4_project_23_0.png)
+    
+
+
+# 9. Exploratory Data Analysis — Rating vs Revenue
+
+
+```python
+plt.figure(figsize=(8,5))
+plt.scatter(merged['averagerating'], merged['worldwide_gross'], alpha=0.3)
+plt.xlabel("IMDB Rating")
+plt.ylabel("Worldwide Gross")
+plt.title("IMDB Rating vs Revenue")
+plt.show()
+```
+
+
+    
+![png](group_4_project_files/group_4_project_25_0.png)
+    
+
+
+# 10. Exploratory Data Analysis — Runtime vs Worldwide Revenue
+
+
+```python
+# Create runtime bins
+bins = [40, 80, 100, 120, 140, 200]
+labels = ["40-80", "80-100", "100-120", "120-140", "140-200"]
+
+merged['runtime_bin'] = pd.cut(
+    merged['runtime_minutes'], 
+    bins=bins, 
+    labels=labels, 
+    include_lowest=True
+)
+```
+
+
+```python
+#Group the present a bar graph
+
+runtime_revenue = (
+    merged.groupby('runtime_bin')['worldwide_gross']
+    .mean()
+)
+
+plt.figure(figsize=(10,6))
+runtime_revenue.plot(kind='bar')
+
+plt.title("Average Worldwide Revenue by Runtime Range")
+plt.xlabel("Runtime Range (minutes)")
+plt.ylabel("Average Worldwide Gross")
+plt.show()
+
+```
+
+
+    
+![png](group_4_project_files/group_4_project_28_0.png)
+    
+
+
+# Conclusions and Recommendations
+1. The studio should focus production investments on Adventure, Animation, and Sci-Fi films, as these genres consistently generate the highest worldwide revenue.
+These genres dominate the top-performing films globally and deliver higher financial returns than other genres. Focusing on high-earning genres increases the likelihood of producing commercially successful films capable of competing with major studios.
+2. Movies with IMDB ratings in the 6.5–8.0 range tend to produce the strongest and most consistent box-office returns.
+While lower-rated films (<6.5) underperform financially, this middle-high rating band shows the best return on investment.
+The studio should prioritize developing movies with strong scripts, casting, and production quality aimed at landing within this range.
+3. The analysis shows that films with runtimes between roughly 120 and 140 minutes achieve higher average revenue, while very short films tend to underperform. Longer films also show great returns.
+This suggests that audiences prefer standard feature-length films and the studio should therefore design productions within this range to increase box-office potential.
