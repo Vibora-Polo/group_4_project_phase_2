@@ -1,0 +1,53 @@
+# ---- General Python Ignores ----
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pkl
+
+# ---- Environment & Cache ----
+.env
+.venv/
+env/
+venv/
+*.egg-info/
+.ipynb_checkpoints/
+
+# ---- Jupyter Notebook Checkpoints ----
+.ipynb_checkpoints/
+
+# ---- OS / Editor / IDE ----
+.DS_Store
+Thumbs.db
+.vscode/
+
+# ---- Data Files to Ignore (to avoid GitHub file size problems) ----
+*.db
+*.sqlite
+*.sqlite3
+*.zip
+*.gz
+*.tar
+*.tgz
+*.csv
+*.tsv
+
+# Ignore entire dataset folder
+zippedData/
+
+# ---- Other large or temporary files ----
+*.log
+*.tmp
+*.bak
+
+# ---- Images / Binary files ----
+*.png
+*.jpg
+*.jpeg
+*.pdf
+
+# ---- Project-specific ignores ----
+im.db
+im.db.zip
+tn.movie_budgets.csv.gz
+bom.movie_gross.csv.gz
